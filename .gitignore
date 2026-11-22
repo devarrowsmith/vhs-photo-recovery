@@ -1,0 +1,18 @@
+# Dependencies, caches, and editor files
+.venv/
+__pycache__/
+.ruff_cache/
+*.py[cod]
+.DS_Store
+.idea/
+.vscode/
+
+# Personal videos and generated photographs
+input/
+output/
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.mpeg
+*.mpg
