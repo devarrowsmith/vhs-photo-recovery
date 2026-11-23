@@ -28,11 +28,6 @@ CONTACT_LABEL_COLOR_BGR = (30, 30, 30)
 CONTACT_LABEL_THICKNESS = 1
 
 # Inpaint parameters
-REFERENCE_IMAGE_SIZE = (1280, 720)
-OVERLAY_REGIONS = (
-    (220, 74, 292, 119),     # Battery indicator
-    (844, 73, 1013, 121),    # Photograph counter
-)
 INPAINT_RADIUS = 3
 
 # Sharpening parameters

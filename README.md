@@ -202,13 +202,21 @@ Adjust the `threshold` and `trim` parameters to adjust automatically generated s
 ## WIP: Post-extraction image enhancement
 An initial version of an image enhancement process has been created.
 Currently this performs two operations:
-- Using inpaint and hard-coded coordinates, remove camera overlays (such as the photo number) from pre-defined regions of the image.
+- Using inpaint, and image & mask parameters provided by the user, remove camera overlays (such as the photo number) from pre-defined regions of the image.
 - Apply a gentle unsharp mask to try and improve the clarity of soft images
 
-To test this process on the first image in a set of extracted images:
+The inpaint process requires all images in the processed directory to have the same dimensions, and to have overlay/s in the same location/s of the image. Inpaint quality is limited: surrounding colours will be matched well, but patterns will be matched poorly,.
+
+To use this feature you'll need to configure a mask:
+- In `/inpaint-masks`, make a copy of `inpaint-mask.example.json`, Name the copy something suitable. Adjust the parameters for your image set: 
+  - `image_dimensions`: The width and height of the images (pixels). All images in the set should have the same dimensions.
+  - `mask_regions`: The x & y coordinates needed to calculate the rectangular area to inpaint, in this order: `x-min`, `y-min`, `x-max`, `y-max` (left, top, right, bottom).  
+    You can specify any number of mask regions. The example has two.
+
+To try the mask on the first image in a set of extracted images:
 
 ```bash
-uv run vhs-enhance "output/<directory name>/restorations" --preview
+uv run vhs-enhance "output/<directory name>/restorations" --inpaint-mask "inpaint-masks/<mask file name>.json" --preview
 ```
 
 This will generate:

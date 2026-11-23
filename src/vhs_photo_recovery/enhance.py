@@ -7,7 +7,12 @@ from pathlib import Path
 
 import cv2
 
-from .remove_overlay import overlay_mask, remove_overlay
+from .remove_overlay import (
+    InpaintMask,
+    load_inpaint_mask,
+    overlay_mask,
+    remove_overlay,
+)
 from .settings import DEFAULT_SHARPEN_STRENGTH, IMAGE_SUFFIXES, JPG_QUALITY
 from .sharpen import sharpen
 
@@ -32,6 +37,7 @@ def enhance_directory(
     source: Path,
     output: Path | None = None,
     *,
+    inpaint_mask: InpaintMask,
     strength: float = DEFAULT_SHARPEN_STRENGTH,
     preview: bool = False,
 ) -> Path:
@@ -70,7 +76,7 @@ def enhance_directory(
             print(f"Warning: could not read {path.name}")
             continue
 
-        cleaned = remove_overlay(image)
+        cleaned = remove_overlay(image, inpaint_mask)
 
         result = sharpen(cleaned, strength)
 
@@ -86,7 +92,7 @@ def enhance_directory(
             raise OSError(f"Failed to save image: {destination}")
 
         if preview:
-            mask = overlay_mask(image)
+            mask = overlay_mask(image, inpaint_mask)
 
             cv2.imwrite(
                 str(output / "overlay-mask.png"),
@@ -129,6 +135,13 @@ def main() -> None:
     )
 
     parser.add_argument(
+        "--inpaint-mask",
+        type=Path,
+        required=True,
+        help="Path to the JSON file defining the inpainting regions",
+    )
+
+    parser.add_argument(
         "--strength",
         type=float,
         default=DEFAULT_SHARPEN_STRENGTH,
@@ -144,9 +157,11 @@ def main() -> None:
     args = parser.parse_args()
 
     try:
+        inpaint_mask = load_inpaint_mask(args.inpaint_mask)
         enhance_directory(
             args.photos,
             args.output,
+            inpaint_mask=inpaint_mask,
             strength=args.strength,
             preview=args.preview,
         )

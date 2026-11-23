@@ -16,3 +16,7 @@ output/
 *.mkv
 *.mpeg
 *.mpg
+
+# Inpaint masks
+/inpaint-masks/*
+!/inpaint-masks/inpaint-mask.example.json
