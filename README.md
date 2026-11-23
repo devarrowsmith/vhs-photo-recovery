@@ -11,6 +11,11 @@ interference
 - outputs restored images
 - outputs artifacts to help you check that the video was processed correctly
 
+🚧 WIP: post-extraction image processing:. An additional command to:
+- remove camera display overlays
+- sharpen recovered images
+- store the resulting images to a separate directory, without modifying the original extracted images.
+
 ## ⚠️ Important privacy notice <!-- omit in toc -->
 
 This repository's `.gitignore` ignores several common video formats, and all directories containing files (including images) that it generates by default, to reduce the chance of publishing private photographs.
@@ -36,6 +41,7 @@ review your staged changes before pushing to check that you aren't accidentally 
   - [2. Boundary tuning](#2-boundary-tuning)
 - [How extraction works](#how-extraction-works)
 - [Known limitations](#known-limitations)
+- [WIP: Post-extraction image enhancement](#wip-post-extraction-image-enhancement)
 - [Linting and formatting](#linting-and-formatting)
 - [Licence](#licence)
 
@@ -192,6 +198,38 @@ Adjust the `threshold` and `trim` parameters to adjust automatically generated s
 - Very dark scenes may be exported as black pictures.
 - Large vertical picture rolls, tracking faults and individually misaligned
   scan lines are not corrected.
+
+## WIP: Post-extraction image enhancement
+An initial version of an image enhancement process has been created.
+Currently this performs two operations:
+- Using inpaint and hard-coded coordinates, remove camera overlays (such as the photo number) from pre-defined regions of the image.
+- Apply a gentle unsharp mask to try and improve the clarity of soft images
+
+To test this process on the first image in a set of extracted images:
+
+```bash
+uv run vhs-enhance "output/<directory name>/restorations" --preview
+```
+
+This will generate:
+- a single enhanced image
+- `before-after.jpg`: a side-by-side comparison of the before/after images
+- `overlay-mask.png`: shows the regions selected for inpainting
+
+To then process all images in the directory, run:
+
+```bash
+uv run vhs-enhance "output/<directory name>/restorations"
+```
+
+You can adjust the level of sharpening with a flag.
+
+```bash
+uv run vhs-enhance "output/<directory name>/restorations" --strength 0.15
+```
+
+The default value is 0.35. Set it to 0 to disable sharpening.
+
 
 ## Linting and formatting
 

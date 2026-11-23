@@ -13,6 +13,7 @@ dependencies = [
 
 [project.scripts]
 vhs-recover = "vhs_photo_recovery.cli:main"
+vhs-enhance = "vhs_photo_recovery.enhance:main"
 
 [dependency-groups]
 dev = [
